@@ -4,3 +4,4 @@ Find the [wordGuessingGame](https://github.com/sparksmb/wordGuessingGame) repo, 
 
 Now complete the class `GuessLetter` (lib/guess_letter.rb) to help you optimize your guesses in the game.
 
+run the command bin/console in the terminal with ruby installed to get started

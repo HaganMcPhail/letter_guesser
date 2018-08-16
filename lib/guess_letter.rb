@@ -3,6 +3,10 @@ class GuessLetter
     @words = ["tiger", "goat", "hamburger", "steak", "fish", "pretty", "awesome", "doge", "meme", "dank", "flabbergasted", "violin", "corgi", "pokemon", "stringify", "raid", "monster", "flexbox", "media", "privilege", "javascript", "ruby", "java", "mocha", "jest", "windows", "unix", "feminism"]
     @correct_letters = []
     @incorrect_letters = []
+    play
+  end
+
+  def play
     puts "How many letters are in this word?"
     @total_letters = gets.strip.to_i
     same_length_words(@total_letters)
@@ -10,21 +14,38 @@ class GuessLetter
   end
 
   def guess_letter
+    possible_words
     if @words.count == 1
       game_over
-    elsif @words.count == 0
-      game_over("No word matching this pattern")
     else
-      popular_letter_count = 0
-      suggestion = ""
-      unique_characters.each do |letter|
-        if words_with_char(letter) > popular_letter_count
-          suggestion = letter
-          popular_letter_count = words_with_char(letter)
-        end
-      end
-      letter_exists(suggestion)
+      letter_exists(possible_letter)
     end
+  end
+
+  def possible_letter
+    count = 0
+    letter = ""
+    get_word_counts.each do |pair|
+      if pair[1] > count
+        letter = pair[0]
+        count = pair[1]
+      end
+    end
+    return letter
+  end
+
+  def get_word_counts
+    word_counts = []
+    unique_characters.each do |letter|
+      word_counts << [letter, words_with_char(letter)]
+    end
+    word_counts
+  end
+
+  def possible_words
+    puts "******* POSSIBLE WORDS *******"
+    puts @words
+    puts "******************************"
   end
 
   def words_with_char(letter)
@@ -61,9 +82,10 @@ class GuessLetter
 
   def letter_exists(letter)
     puts "I suggest '#{letter}'! Was it in the puzzle? (y/n)"
-    if ["Y", "y"].include? gets.strip
+    response = gets.strip
+    if ["Y", "y"].include? response
       correct_guess(letter)
-    elsif ["N", "n"].include? gets.strip
+    elsif ["N", "n"].include? response
       incorrect_guess(letter)
     else
       puts "INVALID RESPONSE (Y/y/N/n) only"
