@@ -23,21 +23,14 @@ class GuessLetter
   end
 
   def possible_letter
-    count = 0
-    letter = ""
-    get_word_counts.each do |pair|
-      if pair[1] > count
-        letter = pair[0]
-        count = pair[1]
-      end
-    end
-    return letter
+    chars = get_word_counts.sort_by{|key,value| value}
+    chars[chars.length/2][0].to_s
   end
 
   def get_word_counts
-    word_counts = []
+    word_counts = {}
     unique_characters.each do |letter|
-      word_counts << [letter, words_with_char(letter)]
+      word_counts.merge!(letter.to_sym => words_with_char(letter))
     end
     word_counts
   end
