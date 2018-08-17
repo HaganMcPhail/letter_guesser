@@ -1,6 +1,6 @@
 class GuessLetter
   def initialize
-    @words = ["tiger", "goat", "hamburger", "steak", "fish", "pretty", "awesome", "doge", "meme", "dank", "flabbergasted", "violin", "corgi", "pokemon", "stringify", "raid", "monster", "flexbox", "media", "privilege", "javascript", "ruby", "java", "mocha", "jest", "windows", "unix", "feminism"]
+    @words = File.readlines( __dir__ + '/../../letter_guesser/somanywords.txt' ).each{|line| line.chomp! }
     @correct_letters = []
     @incorrect_letters = []
     play
