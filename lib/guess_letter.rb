@@ -7,7 +7,7 @@ class GuessLetter
   end
 
   def play
-    puts "How many letters are in this word?"
+    ap "How many letters are in this word?"
     @total_letters = gets.strip.to_i
     same_length_words(@total_letters)
     guess_letter
@@ -43,9 +43,7 @@ class GuessLetter
   end
 
   def possible_words
-    puts "******* POSSIBLE WORDS *******"
-    puts @words
-    puts "******************************"
+    ap "there are now #{@words.count} words"
   end
 
   def words_with_char(letter)
@@ -67,7 +65,7 @@ class GuessLetter
   end
 
   def game_over(message=nil)
-    puts "the correct answer is #{@words.first}" if message.nil?
+    ap "the correct answer is #{@words.first}" if message.nil?
   end
 
   def correct_guess(letter)
@@ -80,17 +78,34 @@ class GuessLetter
     @words = @words.reject{|word| word.include? letter}
   end
 
+  def narrow_list(letter, locations)
+    locations.each do |index|
+      @words = @words.reject{|word| word[index-1] != letter}
+    end
+  end
+
   def letter_exists(letter)
-    puts "I suggest '#{letter}'! Was it in the puzzle? (y/n)"
-    response = gets.strip
-    if ["Y", "y"].include? response
+    ap "I suggest '#{letter}'! Was it in the puzzle? (y/n)"
+    response = gets.strip.downcase
+    if response == "y"
       correct_guess(letter)
-    elsif ["N", "n"].include? response
+      letter_location(letter) if known_location?
+    elsif response == "n"
       incorrect_guess(letter)
     else
-      puts "INVALID RESPONSE (Y/y/N/n) only"
+      ap "INVALID RESPONSE (Y/y/N/n) only"
     end
     guess_letter
   end
 
+  def known_location?
+    ap "Do you know the location? (y/n)"
+    gets.strip.downcase == "y"
+  end
+
+  def letter_location(letter)
+    ap "Where is the letter located? ex(3 5)"
+    locations = gets.strip.split.map(&:to_i)
+    narrow_list(letter, locations)
+  end
 end
